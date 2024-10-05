@@ -24,11 +24,22 @@ optionally you can add `rev="<commit>"` or `rev="<tag>"` to specify a specific v
 The steamworks crate comes bundled with the redistributable dynamic libraries
 of a compatible version of the SDK. Currently it's v158a.
 
+### Enabling Serde support for Steamworks
 If you wish to enable serde support add the following:
 
 ```toml
 [dependencies]
 bevy-steamworks = { git = "https://github.com/QueenOfSquiggles/bevy_steamworks.git", features = ["serde"] }
+```
+
+### Enabling development features
+
+Some additional features are available for ease of development, notably `SteamworksPlugin::init_dev` which initializes a version of the plugin using the Spacewar App ID which is commonly used for SDK testing since it's an example game by Valve.
+
+```toml
+[dependencies]
+bevy-steamworks = { git = "https://github.com/QueenOfSquiggles/bevy_steamworks.git", features = ["dev"] }
+
 ```
 
 ## Usage
