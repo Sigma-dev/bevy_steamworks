@@ -96,4 +96,4 @@ fn main() {
  
 |Bevy Version |bevy\_steamworks|
 |:------------|:---------------|
-|0.14.*         | main      |
+|0.14.\*         |  main, tag 0.1.\* |
