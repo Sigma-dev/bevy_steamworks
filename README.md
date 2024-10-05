@@ -1,5 +1,7 @@
 # bevy-steamworks
 
+[![Main Branch CI Checks](https://github.com/QueenOfSquiggles/bevy_steamworks/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/QueenOfSquiggles/bevy_steamworks/actions/workflows/ci.yml)
+
 <!-- 
 These Badges are from original repo, they're not really mine to use
 [![crates.io](https://img.shields.io/crates/v/bevy-steamworks.svg)](https://crates.io/crates/bevy-steamworks)
