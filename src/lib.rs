@@ -102,23 +102,47 @@ struct SteamEvents {
 
 /// A Bevy-compatible wrapper around various Steamworks events.
 #[derive(Event)]
-#[allow(missing_docs)]
 pub enum SteamworksEvent {
+    /// Called when generating a authentication session ticket.
+    /// This can be used to verify the ticket was created successfully.
     AuthSessionTicketResponse(steamworks::AuthSessionTicketResponse),
+    /// Emitted when an attempt to download a workshop item has completed, with some kind of result (see optional [`Error`][error] )
+    ///
+    /// [error]: steamworks::SteamError
     DownloadItemResult(steamworks::DownloadItemResult),
+    /// Emitted when a friend (by steam ID) requests the client to join their game lobby
     GameLobbyJoinRequested(steamworks::GameLobbyJoinRequested),
+    /// Emitted when a lobby chat room state has changed, this is usually sent when a user has joined or left the lobby.
     LobbyChatUpdate(steamworks::LobbyChatUpdate),
+    ///  Emitted when a user in the lobby sends a chat message, also includes some pertinent metadata
     LobbyChatMsg(steamworks::LobbyChatMsg),
+    /// Emitted when a P2P session fails to connect, providing the id of the user and an error code
     P2PSessionConnectFail(steamworks::P2PSessionConnectFail),
+    /// Emitted when a user wants to communicate via p2p
     P2PSessionRequest(steamworks::P2PSessionRequest),
+    /// Emitted when a user's persona stats changes (things like online/offline status, name, avatar, etc....)
     PersonaStateChange(steamworks::PersonaStateChange),
+    /// Emitted when the connection to the Steam servers fails.
     SteamServerConnectFailure(steamworks::SteamServerConnectFailure),
+    /// Emitted when a connection to the Steam servers is made.
     SteamServersConnected(steamworks::SteamServersConnected),
+    /// Emitted when the connection to the Steam servers is lost.
     SteamServersDisconnected(steamworks::SteamServersDisconnected),
+    /// Emitted when generating a authentication session ticket for web api.
+    /// This can be used to verify the ticket was created successfully.
     TicketForWebApiResponse(steamworks::TicketForWebApiResponse),
+    /// Result of a request to store the achievements on the server, or an "indicate progress" call.
+    /// If both current_progress and max_progress are zero, that means the achievement has been fully unlocked.
     UserAchievementStored(steamworks::UserAchievementStored),
+    /// Emited after calling [`UserStats::request_current_stats()`][ref].
+    ///
+    /// [ref]: steamworks::UserStats::request_current_stats
     UserStatsReceived(steamworks::UserStatsReceived),
+    /// Emited after calling [`UserStats::store_stats()`][ref].
+    ///
+    /// [ref]: steamworks::UserStats::store_stats
     UserStatsStored(steamworks::UserStatsStored),
+    /// Emitted when an authentication ticket has been validated.
     ValidateAuthTicketResponse(steamworks::ValidateAuthTicketResponse),
 }
 
@@ -167,6 +191,11 @@ pub struct SteamworksPlugin {
 }
 
 impl SteamworksPlugin {
+    /// The official app id for Valve's SteamworksSDK demo game. This app ID can be used for testing purposes
+    /// since you likely don't have an app ID untl you pay for the application and do some setup.
+    /// This enables you to start figuring out how to integrate earlier which can ease development struggles for medium to large projects
+    pub const TESTING_SPACEWAR_APPID: u32 = 480;
+
     /// Creates a new `SteamworksPlugin`. The provided `app_id` should correspond
     /// to the Steam app ID provided by Valve.
     pub fn init_app(app_id: impl Into<AppId>) -> Result<Self, SteamAPIInitError> {
@@ -182,6 +211,19 @@ impl SteamworksPlugin {
     pub fn init() -> Result<Self, SteamAPIInitError> {
         Ok(Self {
             steam: Mutex::new(Some(steamworks::Client::init()?)),
+        })
+    }
+
+    #[cfg(feature = "dev")]
+    /// Creates a new `SteamworksPlugin` using the "Spacewar" example application ID
+    /// which allows testing the steamworks API without needing to purchase an app ID.
+    /// Note that this is only available with the "dev" feature and generally is unhelpful
+    /// for release (unless soimehow you *are Valve* and want to port Spacewar to bevy?)
+    pub fn init_dev() -> Result<Self, SteamAPIInitError> {
+        Ok(Self {
+            steam: Mutex::new(Some(steamworks::Client::init_app(
+                Self::TESTING_SPACEWAR_APPID,
+            )?)),
         })
     }
 }
