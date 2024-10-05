@@ -10,8 +10,9 @@ keywords = ["bevy", "gamedev", "steam"]
 
 [features]
 default = []
-
+# Enables serde from the base steamworks crate
 serde = ["steamworks/serde"]
+# Enables extra features that can make early development easier
 dev = []
 
 [dependencies]
